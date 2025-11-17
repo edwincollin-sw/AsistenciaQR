@@ -114,7 +114,7 @@
               </span>
             </a>
             <ul class="treeview-menu">
-              <li><a href="ususario.php"><i class="fa fa-circle-o"></i> Usuarios</a></li>
+              <li><a href="usuario.php"><i class="fa fa-circle-o"></i> Usuarios</a></li>
             </ul>
           </li>
 

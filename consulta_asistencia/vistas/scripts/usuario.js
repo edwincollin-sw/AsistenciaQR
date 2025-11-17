@@ -1,16 +1,12 @@
-var tabla; // (Declaración de variable que probablemente contendrá la instancia de DataTables)
+var tabla;
 
-// function que se ejecuta al inicio
 function init() {
     mostrarform(false);
-
     listar();
 
     $("#formulario").on("submit", function (e){
         guardaryeditar(e);
-    })
-
-    
+    });
 }
 
 function limpiar() {
@@ -19,12 +15,9 @@ function limpiar() {
     $("#email").val("");
     $("#login").val("");
     $("#clave").val("");
-    $("#imagenmuestra").attr("src", "");
-    $("#imagenactual").val("");
     $("#idusuario").val("");
 }
 
-// funcion mostrar formulario
 function mostrarform(flag) {
     limpiar();
     if (flag) {
@@ -38,13 +31,12 @@ function mostrarform(flag) {
         $("#btnAgregar").show();
     }
 }
-// cancelar form
+
 function cancelarform() {
     limpiar();
     mostrarform(false);
 }
 
-// funcion listar
 function listar() {
     tabla = $('#tbllistado').DataTable({
         "aProcessing": true,
@@ -70,10 +62,8 @@ function listar() {
     });
 }
 
-
-// funcion para guardaryeditar
 function guardaryeditar(e) {
-    e.preventDefault(); // no se activara la accion predeterminada
+    e.preventDefault();
     $("#btnGuardar").prop("disabled", true);
     var formData = new FormData($("#formulario")[0]);
 
@@ -90,11 +80,12 @@ function guardaryeditar(e) {
             tabla.ajax.reload();
         }
     });
+
     limpiar();
 }
 
 function mostrar(idusuario) {
-    $.post("../controlador/Usuario.php?op=mostrar", {idusuario: idusuario}, 
+    $.post("../controlador/Usuario.php?op=mostrar", {idusuario: idusuario},
         function (data, status) {
         data = JSON.parse(data);
         mostrarform(true);
@@ -103,21 +94,14 @@ function mostrar(idusuario) {
         $("#apellidos").val(data.apellidos);
         $("#email").val(data.email);
         $("#login").val(data.login);
-        $("#imagenmuestra").show();
-        $("#imagenmuestra").attr("src", "../files/usuarios/" + data.imagen);
-        $("#imagenactual").val(data.imagen);
         $("#idusuario").val(data.id);
-
-        });
+    });
 }
 
-// funcion para desactivar
 function desactivar(idusuario) {
-    bootbox.confirm("¿Está seguro de desactivar este dato?", function (result) {
+    bootbox.confirm("¿Desactivar usuario?", function (result) {
         if (result) {
-            $.post("../controlador/Usuario.php?op=desactivar", {
-                idusuario: idusuario
-            }, function (e) {
+            $.post("../controlador/Usuario.php?op=desactivar", {idusuario: idusuario}, function (e) {
                 bootbox.alert(e);
                 tabla.ajax.reload();
             });
@@ -126,16 +110,14 @@ function desactivar(idusuario) {
 }
 
 function activar(idusuario) {
-    bootbox.confirm("¿Está seguro de activar este dato?", function (result) {
+    bootbox.confirm("¿Activar usuario?", function (result) {
         if (result) {
-            $.post("../controlador/Usuario.php?op=activar", {
-                idusuario: idusuario
-            }, function (e) {
+            $.post("../controlador/Usuario.php?op=activar", {idusuario: idusuario}, function (e) {
                 bootbox.alert(e);
                 tabla.ajax.reload();
             });
         }
-    })
+    });
 }
 
 init();

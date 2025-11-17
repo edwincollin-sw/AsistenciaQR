@@ -1,60 +1,30 @@
 <?php 
-// Iniciamos la sesión
 session_start();
-
-// Incluimos el archivo de la clase Usuario
 require_once "../modelos/Usuario.php";
 
-// Creamos una instancia del objeto Usuario
 $usuario = new Usuario();
 
-// Recibimos los datos enviados por el formulario
-$idusuario   = isset($_POST["idusuario"]) ? limpiarCadena($_POST["idusuario"]) : "";
-$nombre      = isset($_POST["nombre"]) ? limpiarCadena($_POST["nombre"]) : "";
-$apellidos   = isset($_POST["apellidos"]) ? limpiarCadena($_POST["apellidos"]) : "";
-$login       = isset($_POST["login"]) ? limpiarCadena($_POST["login"]) : "";
-$email       = isset($_POST["email"]) ? limpiarCadena($_POST["email"]) : "";
-$password    = isset($_POST["clave"]) ? limpiarCadena($_POST["clave"]) : "";
-$imagen      = isset($_POST["imagen"]) ? limpiarCadena($_POST["imagen"]) : "";
+$idusuario = isset($_POST["idusuario"]) ? limpiarCadena($_POST["idusuario"]) : "";
+$nombre    = isset($_POST["nombre"]) ? limpiarCadena($_POST["nombre"]) : "";
+$apellidos = isset($_POST["apellidos"]) ? limpiarCadena($_POST["apellidos"]) : "";
+$login     = isset($_POST["login"]) ? limpiarCadena($_POST["login"]) : "";
+$email     = isset($_POST["email"]) ? limpiarCadena($_POST["email"]) : "";
+$password  = isset($_POST["clave"]) ? limpiarCadena($_POST["clave"]) : "";
 
-// Dependiendo de la operación solicitada mediante la variable $_GET["op"]
 switch ($_GET["op"]) {
 
     case 'guardaryeditar':
 
-        // Inicializamos la variable que contendrá el hash de la contraseña
         $clavehash = "";
-
-        // Verificamos si se ha subido una nueva imagen
-        if (!file_exists($_FILES['imagen']['tmp_name']) || !is_uploaded_file($_FILES['imagen']['tmp_name'])) {
-            // Si no se ha subido una nueva imagen, conservamos la imagen actual
-            $imagen = $_POST["imagenactual"];
-        } else {
-            // Si se ha subido una nueva imagen, la movemos al directorio correspondiente
-            $ext = explode(".", $_FILES["imagen"]["name"]);
-
-            if (
-                $_FILES['imagen']['type'] == "image/jpg" ||
-                $_FILES['imagen']['type'] == "image/jpeg" ||
-                $_FILES['imagen']['type'] == "image/png"
-            ) {
-                $imagen = round(microtime(true)) . '.' . end($ext);
-                move_uploaded_file($_FILES["imagen"]["tmp_name"], "../files/usuarios/" . $imagen);
-            }
-        }
-
-        // Si se ha ingresado una nueva contraseña
         if (!empty($password)) {
-            // Generamos el hash SHA256 para la contraseña
             $clavehash = hash("SHA256", $password);
         }
 
-        // Verificamos si se está insertando o editando
         if (empty($idusuario)) {
-            $rspta = $usuario->insertar($nombre, $apellidos, $login, $email, $clavehash, $imagen);
-            echo $rspta ? "Datos registrados correctamente" : "No se pudo registrar todos los datos del usuario";
+            $rspta = $usuario->insertar($nombre, $apellidos, $login, $email, $clavehash);
+            echo $rspta ? "Usuario registrado correctamente" : "No se pudo registrar el usuario";
         } else {
-            $rspta = $usuario->editar($idusuario, $nombre, $apellidos, $login, $email, $clavehash, $imagen);
+            $rspta = $usuario->editar($idusuario, $nombre, $apellidos, $login, $email, $clavehash);
             echo $rspta ? "Datos actualizados correctamente" : "No se pudo actualizar los datos";
         }
 
@@ -62,12 +32,12 @@ switch ($_GET["op"]) {
 
     case 'desactivar':
         $rspta = $usuario->desactivar($idusuario);
-        echo $rspta ? "Datos desactivados correctamente" : "No se pudo desactivar los datos";
+        echo $rspta ? "Usuario desactivado" : "No se pudo desactivar";
         break;
 
     case 'activar':
         $rspta = $usuario->activar($idusuario);
-        echo $rspta ? "Datos activados correctamente" : "No se pudo activar los datos";
+        echo $rspta ? "Usuario activado" : "No se pudo activar";
         break;
 
     case 'mostrar':
@@ -92,11 +62,8 @@ switch ($_GET["op"]) {
                 "2" => $reg->apellidos,
                 "3" => $reg->login,
                 "4" => $reg->email,
-                "5" => '<img src="../files/usuarios/'.$reg->imagen.'" height="50px" width="50px">',
-                "6" => ($reg->estado) ? 
-                    '<span class="label bg-green">Activado</span>' 
-                    : 
-                    '<span class="label bg-red">Desactivado</span>'
+                "5" => ($reg->estado) ? '<span class="label bg-green">Activo</span>' 
+                                      : '<span class="label bg-red">Inactivo</span>'
             );
         }
 
@@ -113,17 +80,14 @@ switch ($_GET["op"]) {
     case 'verificar':
 
         $login = $_POST['logina'];
-        $clave = $_POST['clavea'];
+        $clave = hash("SHA256", $_POST['clavea']);
 
-        $clavehash = hash("SHA256", $clave);
-
-        $rspta = $usuario->verificar($login, $clavehash);
+        $rspta = $usuario->verificar($login, $clave);
         $fetch = $rspta->fetch_object();
 
         if (isset($fetch)) {
-            $_SESSION['idusuario'] = $fetch->idusuario;
+            $_SESSION['idusuario'] = $fetch->id;
             $_SESSION['nombre'] = $fetch->nombre;
-            $_SESSION['imagen'] = $fetch->imagen;
             $_SESSION['login'] = $fetch->login;
         }
 

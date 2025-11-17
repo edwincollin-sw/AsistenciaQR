@@ -4,28 +4,28 @@ require "../config/conexion.php";
 
 class Usuario
 {
-    // implementamos nuestro constructor
     public function __construct()
     {
     }
 
-    // metodo insertar registro
-    public function insertar($nombre, $apellidos, $login, $email, $clavehash, $imagen)
+    // insertar registro SIN imagen
+    public function insertar($nombre, $apellidos, $login, $email, $clavehash)
     {
-        $sql = "INSERT INTO usuarios (nombre,apellidos,login,email,password,imagen,estado) 
-                VALUES ('$nombre','$apellidos','$login','$email','$clavehash','$imagen','1')";
+        $sql = "INSERT INTO usuarios (nombre,apellidos,login,email,password,estado) 
+                VALUES ('$nombre','$apellidos','$login','$email','$clavehash','1')";
         return ejecutarConsulta($sql);
     }
 
-    public function editar($idusuario, $nombre, $apellidos, $login, $email, $clavehash, $imagen)
+    // editar registro SIN imagen
+    public function editar($idusuario, $nombre, $apellidos, $login, $email, $clavehash)
     {
         if (empty($clavehash)) {
             $sql = "UPDATE usuarios SET nombre='$nombre', apellidos='$apellidos', login='$login', 
-                    email='$email', imagen='$imagen' 
+                    email='$email' 
                     WHERE id='$idusuario'";
         } else {
             $sql = "UPDATE usuarios SET nombre='$nombre', apellidos='$apellidos', login='$login', 
-                    email='$email', password='$clavehash', imagen='$imagen' 
+                    email='$email', password='$clavehash'
                     WHERE id='$idusuario'";
         }
         return ejecutarConsulta($sql);
@@ -43,14 +43,12 @@ class Usuario
         return ejecutarConsulta($sql);
     }
 
-    // metodo para mostrar registros
     public function mostrar($idusuario)
     {
         $sql = "SELECT * FROM usuarios WHERE id='$idusuario'";
         return ejecutarConsultaSimpleFila($sql);
     }
 
-    // listar registros
     public function listar()
     {
         $sql = "SELECT * FROM usuarios";
@@ -63,7 +61,6 @@ class Usuario
         return ejecutarConsulta($sql);
     }
 
-    // Función para verificar el acceso al sistema
     public function verificar($login, $clave)
     {
         $sql = "SELECT * FROM usuarios WHERE login='$login' AND password='$clave' AND estado='1'";
