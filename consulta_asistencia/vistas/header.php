@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Compartiendo | Có....</title>
+  <title>Asistencia QR</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.5 -->
@@ -52,7 +52,7 @@
             <li class="dropdown user user-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <img src="../public/dist/img/user_default.png" class="user-image" alt="User Image">
-                <span class="hidden-xs">CompartiendoCódigos</span>
+                <span class="hidden-xs">Asistencia QR</span>
               </a>
               <ul class="dropdown-menu">
                 <!-- User image -->
@@ -60,7 +60,7 @@
                   <img src="../public/dist/img/user_default.jpg" class="img-circle" alt="User Image">
 
                   <p>
-                    CompartiendoCódigos - Desarrollo web
+                    Asistencia QR
                     <small>2021-2022</small>
                   </p>
                 </li>

@@ -1,4 +1,4 @@
-<?php 
+   <!-- #region--><?php 
 require 'header.php';
 ?>
 <!--CONTENIDO -->
