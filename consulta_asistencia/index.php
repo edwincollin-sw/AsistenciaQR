@@ -1,2 +1,3 @@
-<?php 
-header('location: vistas/default.php');
+<?php
+header('Location: /vistas/default.php');
+exit;
