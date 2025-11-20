@@ -1,17 +1,16 @@
-<!-- #region-->
-<?php 
-require 'header.php';
-?>
-
 <?php
 ob_start();
 session_start();
 
+// Validación de sesión
 if (!isset($_SESSION['nombre'])) {
     header("Location: login.html");
-} else {
-    require 'header.php';
+    exit();
+}
+
+require 'header.php';
 ?>
+
 <!--CONTENIDO -->
 <div class="content-wrapper">
 
@@ -24,10 +23,8 @@ if (!isset($_SESSION['nombre'])) {
       <!-- /.col-md12 -->
       <div class="col-md-12">
 
-        <!--fin box-->
         <div class="box">
 
-          <!--box-header-->
           <div class="box-header with-border">
             <h1 class="box-title">
               Lista de Usuarios
@@ -35,11 +32,9 @@ if (!isset($_SESSION['nombre'])) {
                 <i class="fa fa-plus-circle"></i> Agregar
               </button>
             </h1>
-            <div class="box-tools pull-right"></div>
           </div>
-          <!--box-header-->
 
-          <!--tabla para listar datos-->
+          <!-- Tabla listado -->
           <div class="panel-body table-responsive" id="listadoregistros">
 
             <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
@@ -63,9 +58,8 @@ if (!isset($_SESSION['nombre'])) {
             </table>
 
           </div>
-          <!--fin tabla para listar datos-->
 
-          <!--formulario para datos-->
+          <!-- Formulario -->
           <div class="panel-body" id="formularioregistros" style="display:none;">
 
             <form name="formulario" id="formulario" method="POST">
@@ -110,30 +104,23 @@ if (!isset($_SESSION['nombre'])) {
             </form>
 
           </div>
-          <!--fin formulario para datos-->
 
         </div>
-        <!--fin box-->
 
       </div>
-      <!-- /.col-md12 -->
 
     </div>
-    <!-- fin Default-box -->
 
   </section>
-  <!-- /.content -->
 
 </div>
-<!--FIN CONTENIDO -->
 
-<?php 
+<?php
 require 'footer.php';
 ?>
 
 <script src="scripts/usuario.js"></script>
 
 <?php
-}
 ob_end_flush();
 ?>
