@@ -1,5 +1,16 @@
-   <!-- #region--><?php 
+<!-- #region-->
+<?php 
 require 'header.php';
+?>
+
+<?php
+ob_start();
+session_start();
+
+if (!isset($_SESSION['nombre'])) {
+    header("Location: login.html");
+} else {
+    require 'header.php';
 ?>
 <!--CONTENIDO -->
 <div class="content-wrapper">
@@ -48,7 +59,7 @@ require 'header.php';
                 <th>Login</th>
                 <th>Email</th>
                 <th>Estado</th>
-              </tfoot>   
+              </tfoot>
             </table>
 
           </div>
@@ -56,47 +67,47 @@ require 'header.php';
 
           <!--formulario para datos-->
           <div class="panel-body" id="formularioregistros" style="display:none;">
-              
-              <form name="formulario" id="formulario" method="POST">
-                  
-                  <input type="hidden" name="idusuario" id="idusuario">
-                  
-                  <div class="form-group col-lg-6 col-md-6 col-xs-12">
-                      <label>Nombre (*)</label>
-                      <input class="form-control" type="text" name="nombre" id="nombre" maxlength="100" required>
-                  </div>
 
-                  <div class="form-group col-lg-6 col-md-6 col-xs-12">
-                      <label>Apellidos (*)</label>
-                      <input class="form-control" type="text" name="apellidos" id="apellidos" maxlength="100" required>
-                  </div>
+            <form name="formulario" id="formulario" method="POST">
 
-                  <div class="form-group col-lg-6 col-md-6 col-xs-12">
-                      <label>Email</label>
-                      <input class="form-control" type="email" name="email" id="email" maxlength="70">
-                  </div>
+              <input type="hidden" name="idusuario" id="idusuario">
 
-                  <div class="form-group col-lg-6 col-md-6 col-xs-12">
-                      <label>Login (*)</label>
-                      <input class="form-control" type="text" name="login" id="login" maxlength="20" required>
-                  </div>
+              <div class="form-group col-lg-6 col-md-6 col-xs-12">
+                <label>Nombre (*)</label>
+                <input class="form-control" type="text" name="nombre" id="nombre" maxlength="100" required>
+              </div>
 
-                  <div class="form-group col-lg-6 col-md-6 col-xs-12">
-                      <label>Clave</label>
-                      <input class="form-control" type="password" name="clave" id="clave" maxlength="64">
-                  </div>
+              <div class="form-group col-lg-6 col-md-6 col-xs-12">
+                <label>Apellidos (*)</label>
+                <input class="form-control" type="text" name="apellidos" id="apellidos" maxlength="100" required>
+              </div>
 
-                  <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                      <button class="btn btn-primary" type="submit" id="btnGuardar">
-                        <i class="fa fa-save"></i> Guardar
-                      </button>
+              <div class="form-group col-lg-6 col-md-6 col-xs-12">
+                <label>Email</label>
+                <input class="form-control" type="email" name="email" id="email" maxlength="70">
+              </div>
 
-                      <button class="btn btn-danger" onclick="cancelarform()" type="button">
-                        <i class="fa fa-arrow-circle-left"></i> Cancelar
-                      </button>
-                  </div>
+              <div class="form-group col-lg-6 col-md-6 col-xs-12">
+                <label>Login (*)</label>
+                <input class="form-control" type="text" name="login" id="login" maxlength="20" required>
+              </div>
 
-              </form>
+              <div class="form-group col-lg-6 col-md-6 col-xs-12">
+                <label>Clave</label>
+                <input class="form-control" type="password" name="clave" id="clave" maxlength="64">
+              </div>
+
+              <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <button class="btn btn-primary" type="submit" id="btnGuardar">
+                  <i class="fa fa-save"></i> Guardar
+                </button>
+
+                <button class="btn btn-danger" onclick="cancelarform()" type="button">
+                  <i class="fa fa-arrow-circle-left"></i> Cancelar
+                </button>
+              </div>
+
+            </form>
 
           </div>
           <!--fin formulario para datos-->
@@ -121,3 +132,8 @@ require 'footer.php';
 ?>
 
 <script src="scripts/usuario.js"></script>
+
+<?php
+}
+ob_end_flush();
+?>

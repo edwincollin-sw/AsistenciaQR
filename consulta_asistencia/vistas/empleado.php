@@ -1,4 +1,10 @@
 <?php 
+ob_start();
+session_start();
+
+if (!isset($_SESSION['nombre'])) {
+    header("Location: login.html");
+} else {
 require 'header.php';
 ?>
 <!--CONTENIDO -->
@@ -83,7 +89,7 @@ require 'header.php';
 
               <div class="form-group col-lg-6 col-md-6 col-xs-12">
                 <label>Codigo de asistencia (*)</label>
-                <input class="form-control" type="password" name="clave" id="clave" maxlength="64" placeholder="Clave">
+                <input class="form-control" type="text" name="codigo" id="codigo" maxlength="64" placeholder="Clave asistencia" required>
               </div>
 
               <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -121,3 +127,10 @@ require 'footer.php';
 ?>
 
 <script src="scripts/empleado.js"></script>
+
+<?php }
+
+ob_end_flush();
+
+?>
+
