@@ -1,3 +1,3 @@
 <?php
-header('Location: /vistas/default.php');
+header('Location: /vistas/login.html');
 exit;
