@@ -1,28 +1,42 @@
-$("#frmAcceso").on('submit', function(e) {
-    // Evita que el formulario se envíe de forma predeterminada
+$("#frmAcceso").on('submit', function (e) {
     e.preventDefault();
 
-    // Obtiene los valores de los campos de entrada
-    logina = $("#logina").val();
-    clavea = $("#clavea").val();
+    let logina = $("#logina").val();
+    let clavea = $("#clavea").val();
 
-    // Verifica si los campos están vacíos
-    if ($("#logina").val() == "" || $("#clavea").val() == "") {
-        // Muestra una alerta si los campos están vacíos
+    // Validar campos vacíos
+    if (logina === "" || clavea === "") {
+        document.activeElement.blur();  // Evita warning aria-hidden
         bootbox.alert("Asegúrate de llenar todos los campos");
-    } else {
-        // Realiza una solicitud POST al script PHP que verifica las credenciales del usuario
-        $.post("../controlador/Usuario.php?op=verificar", {"logina": logina, "clavea": clavea}, function(data) {
-            console.log(data); // Imprime la respuesta del servidor en la consola
+        return;
+    }
 
-            // Comprueba si el usuario y la contraseña son correctos
-            if (data != "null") {
-                // Redirige al usuario a la página "escritorio.php" si las credenciales son correctas
-                $(location).attr("href", "escritorio.php");
+    // Enviar credenciales al backend
+    $.post("../controlador/Usuario.php?op=verificar",
+        { logina: logina, clavea: clavea },
+        function (response) {
+
+            let data;
+
+            // Intentar leer JSON válido
+            try {
+                data = JSON.parse(response);
+            } catch (error) {
+                console.error("Respuesta del servidor:", response);
+                document.activeElement.blur();
+                bootbox.alert("Error inesperado en el servidor.");
+                return;
+            }
+
+            // Procesar respuesta del servidor
+            if (data.status === "ok") {
+                // Login correcto
+                window.location.href = "escritorio.php";
             } else {
-                // Muestra una alerta si las credenciales son incorrectas
+                // Credenciales incorrectas
+                document.activeElement.blur();  // Evita warning aria-hidden
                 bootbox.alert("Usuario y/o contraseña incorrectos");
             }
-        });
-    }
+        }
+    );
 });
