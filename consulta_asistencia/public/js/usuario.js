@@ -4,7 +4,7 @@ function init() {
     mostrarform(false);
     listar();
 
-    $("#formulario").on("submit", function (e){
+    $("#formulario_usuario").on("submit", function(e){
         guardaryeditar(e);
     });
 }
@@ -22,38 +22,29 @@ function mostrarform(flag) {
     limpiar();
     if (flag) {
         $("#listadoregistros").hide();
-        $("#formularioregistros").show();
-        $("#btnGuardar").prop("disabled", false);
+        $("#formularioregistros_usuario").show();
+        $("#btnGuardar_usuario").prop("disabled", false);
         $("#btnAgregar").hide();
     } else {
         $("#listadoregistros").show();
-        $("#formularioregistros").hide();
+        $("#formularioregistros_usuario").hide();
         $("#btnAgregar").show();
     }
 }
 
-function cancelarform() {
+function cancelarform_usuario() {
     limpiar();
     mostrarform(false);
 }
 
 function listar() {
-    tabla = $('#tbllistado').DataTable({
-        "aProcessing": true,
-        "aServerSide": true,
-        dom: 'Bfrtip',
-        buttons: [
-            'copyHtml5',
-            'excelHtml5',
-            'csvHtml5',
-            'pdf'
-        ],
+    tabla = $('#tbllistado_usuario').DataTable({
         "ajax": {
             url: '../controlador/Usuario.php?op=listar',
             type: "get",
-            datatype: "json",
+            dataType: "json",
             error: function (e) {
-                console.log(e.responseText);
+                console.log("ERROR listar:", e.responseText);
             }
         },
         "bDestroy": true,
@@ -64,8 +55,9 @@ function listar() {
 
 function guardaryeditar(e) {
     e.preventDefault();
-    $("#btnGuardar").prop("disabled", true);
-    var formData = new FormData($("#formulario")[0]);
+    $("#btnGuardar_usuario").prop("disabled", true);
+
+    var formData = new FormData($("#formulario_usuario")[0]);
 
     $.ajax({
         url: "../controlador/Usuario.php?op=guardaryeditar",
@@ -85,9 +77,11 @@ function guardaryeditar(e) {
 }
 
 function mostrar(idusuario) {
-    $.post("../controlador/Usuario.php?op=mostrar", {idusuario: idusuario},
-        function (data, status) {
+    $.post("../controlador/Usuario.php?op=mostrar",
+    {idusuario: idusuario},
+    function (data) {
         data = JSON.parse(data);
+
         mostrarform(true);
 
         $("#nombre").val(data.nombre);
@@ -101,7 +95,9 @@ function mostrar(idusuario) {
 function desactivar(idusuario) {
     bootbox.confirm("¿Desactivar usuario?", function (result) {
         if (result) {
-            $.post("../controlador/Usuario.php?op=desactivar", {idusuario: idusuario}, function (e) {
+            $.post("../controlador/Usuario.php?op=desactivar",
+            {idusuario: idusuario},
+            function (e) {
                 bootbox.alert(e);
                 tabla.ajax.reload();
             });
@@ -112,7 +108,9 @@ function desactivar(idusuario) {
 function activar(idusuario) {
     bootbox.confirm("¿Activar usuario?", function (result) {
         if (result) {
-            $.post("../controlador/Usuario.php?op=activar", {idusuario: idusuario}, function (e) {
+            $.post("../controlador/Usuario.php?op=activar",
+            {idusuario: idusuario},
+            function (e) {
                 bootbox.alert(e);
                 tabla.ajax.reload();
             });

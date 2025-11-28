@@ -1,87 +1,78 @@
-<?php 
-// Incluimos la conexión
-require "../config/Conexion.php";
+<?php
+require_once "../config/conexion.php";
 
 class Usuario {
 
-    // Constructor vacío
-    public function __construct() { }
+    private $db;
 
-    /* =========================================================================
-       INSERTAR USUARIO
-    ==========================================================================*/
-    public function insertar($nombre, $apellidos, $login, $email, $clavehash) {
-        $sql = "INSERT INTO usuarios(nombre, apellidos, login, email, password, estado)
-                VALUES ('$nombre', '$apellidos', '$login', '$email', '$clavehash', '1')";
-        return ejecutarConsulta($sql);
+    public function __construct() {
+        global $conexion;
+        $this->db = $conexion;
     }
 
-    /* =========================================================================
-       EDITAR USUARIO
-    ==========================================================================*/
-    public function editar($idusuario, $nombre, $apellidos, $login, $email, $clavehash) {
+    public function insertar($nombre, $apellidos, $login, $email, $clavehash) {
+        $stmt = $this->db->prepare(
+            "INSERT INTO usuarios(nombre, apellidos, login, email, password, estado, imagen)
+             VALUES (?, ?, ?, ?, ?, 1, 'default.png')"
+        );
+        $stmt->bind_param("sssss", $nombre, $apellidos, $login, $email, $clavehash);
+        $res = $stmt->execute();
+        $stmt->close();
+        return $res;
+    }
 
-        // Si la contraseña viene vacía, no cambiarla
-        if ($clavehash != "") {
-            $sql = "UPDATE usuarios SET nombre='$nombre', apellidos='$apellidos', login='$login', 
-                    email='$email', password='$clavehash'
-                    WHERE id='$idusuario'";
+    public function editar($idusuario, $nombre, $apellidos, $login, $email, $clavehash = "") {
+        if ($clavehash !== "") {
+            $stmt = $this->db->prepare(
+                "UPDATE usuarios SET nombre=?, apellidos=?, login=?, email=?, password=? WHERE id=?"
+            );
+            $stmt->bind_param("sssssi", $nombre, $apellidos, $login, $email, $clavehash, $idusuario);
         } else {
-            $sql = "UPDATE usuarios SET nombre='$nombre', apellidos='$apellidos', login='$login', 
-                    email='$email'
-                    WHERE id='$idusuario'";
+            $stmt = $this->db->prepare(
+                "UPDATE usuarios SET nombre=?, apellidos=?, login=?, email=? WHERE id=?"
+            );
+            $stmt->bind_param("ssssi", $nombre, $apellidos, $login, $email, $idusuario);
         }
 
-        return ejecutarConsulta($sql);
+        $res = $stmt->execute();
+        $stmt->close();
+        return $res;
     }
 
-    /* =========================================================================
-       DESACTIVAR USUARIO
-    ==========================================================================*/
     public function desactivar($idusuario) {
-        $sql = "UPDATE usuarios SET estado='0' WHERE id='$idusuario'";
-        return ejecutarConsulta($sql);
+        $stmt = $this->db->prepare("UPDATE usuarios SET estado=0 WHERE id=?");
+        $stmt->bind_param("i", $idusuario);
+        $stmt->execute();
+        return true;
     }
 
-    /* =========================================================================
-       ACTIVAR USUARIO
-    ==========================================================================*/
     public function activar($idusuario) {
-        $sql = "UPDATE usuarios SET estado='1' WHERE id='$idusuario'";
-        return ejecutarConsulta($sql);
+        $stmt = $this->db->prepare("UPDATE usuarios SET estado=1 WHERE id=?");
+        $stmt->bind_param("i", $idusuario);
+        $stmt->execute();
+        return true;
     }
 
-    /* =========================================================================
-       MOSTRAR UN USUARIO
-    ==========================================================================*/
     public function mostrar($idusuario) {
-        $sql = "SELECT * FROM usuarios WHERE id='$idusuario'";
-        return ejecutarConsultaSimpleFila($sql);
+        $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE id=? LIMIT 1");
+        $stmt->bind_param("i", $idusuario);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
     }
 
-    /* =========================================================================
-       LISTAR USUARIOS
-    ==========================================================================*/
     public function listar() {
-        $sql = "SELECT * FROM usuarios";
-        return ejecutarConsulta($sql);
+        return $this->db->query("SELECT * FROM usuarios");
     }
 
-    /* =========================================================================
-       VERIFICAR LOGIN
-       IMPORTANTE: Este método es el que usa el login.js
-    ==========================================================================*/
     public function verificar($login, $clavehash) {
-
-        $sql = "SELECT id, nombre, login, email, estado 
-                FROM usuarios 
-                WHERE login='$login' 
-                AND password='$clavehash' 
-                AND estado='1' 
-                LIMIT 1";
-
-        return ejecutarConsulta($sql);
+        $stmt = $this->db->prepare(
+            "SELECT id, nombre, login, email, estado, imagen
+             FROM usuarios 
+             WHERE login=? AND password=? AND estado=1 LIMIT 1"
+        );
+        $stmt->bind_param("ss", $login, $clavehash);
+        $stmt->execute();
+        return $stmt->get_result();
     }
-
 }
 ?>
