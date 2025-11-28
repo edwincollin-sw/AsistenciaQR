@@ -2,22 +2,18 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Asistencias QR</title>
+  <title>Asistencias QR - Login</title>
 
   <link rel="stylesheet" href="../public/css/bootstrap.min.css">
-
-  <!-- Font Awesome desde CDN (quitas el error 404) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
   <link rel="stylesheet" href="../public/css/AdminLTE.min.css">
   <link rel="stylesheet" href="../public/css/_all-skins.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body class="hold-transition login-page">
-
   <div class="login-box">
     <div class="login-logo">
-      <a href="#"><b>Asistencias </b>QR</a>
+      <a href="#"><b>Asistencias</b> QR</a>
     </div>
 
     <div class="login-box-body">
@@ -43,7 +39,6 @@
   <script src="../public/js/jquery-3.1.1.min.js"></script>
   <script src="../public/js/bootstrap.min.js"></script>
   <script src="../public/js/bootbox.min.js"></script>
-  <script src="scripts/login.js"></script>
-
+  <script src="../public/js/login.js"></script>
 </body>
 </html>
